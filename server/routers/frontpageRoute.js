@@ -1,13 +1,12 @@
 import { Router } from "express";
+import { guard } from "../util/guardmw.js";
 const router = Router();
 import dotenv from "dotenv"
 dotenv.config();
 
-router.get("/frontpage", (req, res) => {
-    if(!req.session.user){
-        return res.status(404).send({ message: "User has no session"});
-    }
-    res.send({ message: "User is logged in" });
+
+router.get("/frontpage", guard, (req, res) => {
+    res.send({message: `Welcome ${req.session.user}.`});
 });
 
 export default router;

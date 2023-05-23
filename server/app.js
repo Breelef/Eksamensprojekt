@@ -5,6 +5,9 @@ import helmet from "helmet"
 app.use(helmet());
 import dotenv from "dotenv"
 dotenv.config();
+import bodyParser from "body-parser";
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
 
 import session from "express-session";
@@ -12,13 +15,17 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }
+    cookie: { 
+        secure: false,
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000
+    }
 }));
 
 import cors from "cors";
 app.use(cors({
     credentials: true,
-    origin: true
+    origin: 'http://localhost:5173'
 }));
 
 import http from "http";
@@ -35,6 +42,10 @@ app.use(loginRoute);
 //Frontpage Route
 import frontPageRoute from "./routers/frontpageRoute.js";
 app.use(frontPageRoute);
+
+//Pill taken API
+import updateUser from "./routers/updateUser.js";
+app.use(updateUser);
 
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, (error) => {

@@ -1,15 +1,23 @@
 <script>
   import { Router, Link, Route } from "svelte-navigator";
   import LoginPage from "./pages/loginPage/LoginPage.svelte";
-  import Frontpage from "./pages/Frontpage/Frontpage.svelte";
+  import TakePillPage from "./pages/takepill/TakePill.svelte";
   import PrivateRoute from "./PrivateRoute.svelte";
   import SignupPage from "./pages/signupPage/SignupPage.svelte";
+  import BluePillPage from "./pages/bluepillpage/BluePillPage.svelte";
+  import RedPillPage from "./pages/redpillpage/RedPillPage.svelte";
 </script>
 
 <Router>
   <Route path="/" component={LoginPage} />
-  <PrivateRoute path="/frontpage" let:location>
-    <Frontpage />
+  <PrivateRoute path="/takePill" let:location>
+    <TakePillPage />
+  </PrivateRoute>
+  <PrivateRoute path="/frontpageBluepill" let:location>
+    <BluePillPage />
+  </PrivateRoute>
+  <PrivateRoute path="/frontpageRedpill" let:location>
+    <RedPillPage />
   </PrivateRoute>
   <Route path="/signup" component={SignupPage} />
 </Router>

@@ -13,12 +13,25 @@
                 const response = await fetch($BASE_URL + "/login", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
+                credentials: 'include'
             });
+            const userObject = await response.json();
+            console.log(userObject);
                 if (response.status === 200) {
-                    user.set({ username, password });
-                    const from = ($location.state && $location.state.from) || "/frontpage";
-                    navigate(from, { replace: true });
+                    user.set({ username, hasChosen: userObject.hasChosen, choice: userObject.choice });
+                    if(userObject.hasChosen === 0){
+                        const from = ($location.state && $location.state.from) || "/takePill";
+                        navigate(from, { replace: true });
+                    }else{
+                        if(userObject.choice === 1){
+                        const from = ($location.state && $location.state.from) || "/frontpageRedpill";
+                        navigate(from, { replace: true });
+                    }else{
+                        const from = ($location.state && $location.state.from) || "/frontpageBluepill";
+                        navigate(from, { replace: true });
+                    }
+                }
                 }else {
                     alert('Invalid username or password');
                 }

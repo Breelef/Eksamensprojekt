@@ -11,8 +11,13 @@ router.post("/login", async (req, res) => {
         const user = await db.get("SELECT * FROM users WHERE username=?", [username]);
         const isSame = await bcrypt.compare(password, user.password);
         if(user && isSame){
-            req.session.user = {username};
-            res.status(200).send({ message: "User logged in", username: user.username });
+            req.session.user = {
+                username: username,
+                email: user.email
+            };
+            const hasChosen = user.hasChosen;
+            const choice = user.choice;
+            res.status(200).send({choice: choice, hasChosen: hasChosen, username: username});
         }else {
             res.status(401).json({ error: "Invalid Credentials" });
         }
