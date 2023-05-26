@@ -8,6 +8,7 @@ dotenv.config();
 import bodyParser from "body-parser";
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+import fetchArticles from "./util/fetchArticles.js";
 
 
 import session from "express-session";
@@ -31,6 +32,52 @@ app.use(cors({
 import http from "http";
 const server = http.createServer(app);
 
+import { Server } from "socket.io"
+const io = new Server (server, {
+    cors: {
+        origin: "*",
+        methods: ["*"]
+    }
+});
+
+let cachedArticlesbluepill = null;
+let cachedArticlesredpill = null;
+
+const bluePillNamespace = io.on("/bluepill");
+
+bluePillNamespace.on("connection", (socket) => {
+    if (cachedArticlesbluepill) {
+        console.log("Sending cached articles in response to 'requestArticles' event.");
+        socket.emit("bluepillarticles", cachedArticles);
+      } else {
+        console.log("No cached articles. Fetching articles...");
+        fetchArticles("entertainment")
+          .then((articles) => {
+            cachedArticlesbluepill = articles;
+            console.log("Articles fetched. Sending articles in response to 'requestArticles' event.");
+            socket.emit("bluepillarticles", articles);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+    });
+    
+const redpillNamespace = io.on("/redpill");
+redpillNamespace.on("connection", (socket) => {
+    if(cachedArticlesredpill){
+        socket.emit("redpillarticles", cachedArticlesredpill);
+      }else{
+        fetchArticles("terror")
+        .then((articles) => {
+            cachedArticlesredpill = articles;
+            socket.emit("redpillarticles", articles);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+      }
+})
 //Signup route
 import signUpRoute from "./routers/signupRoute.js";
 app.use(signUpRoute);
@@ -46,6 +93,9 @@ app.use(frontPageRoute);
 //Pill taken API
 import updateUser from "./routers/updateUser.js";
 app.use(updateUser);
+
+
+//fetchArticles();
 
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, (error) => {
