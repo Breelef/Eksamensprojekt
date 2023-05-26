@@ -32,7 +32,7 @@
 <button on:click={handleArticles}>Fetch Articles</button>
 <div class="flex flex-wrap">
     {#each $ArticleListBluePill as article (article.key)}
-        <Card class="relative m-2">
+        <Card class="relative m-2" img="{decodeURIComponent(article.urlToImage)}">
             <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white pb-3">{article.title}</h5>
             <h5 class="mb-2 text-lg tracking-tight text-gray-900 dark:text-white pb-3">{article.description}</h5>
             <p class="absolute bottom-0 left-0 m-2 text-gray-500">{article.publishedAt}</p>

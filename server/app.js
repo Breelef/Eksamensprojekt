@@ -43,12 +43,12 @@ const io = new Server (server, {
 let cachedArticlesbluepill = null;
 let cachedArticlesredpill = null;
 
-const bluePillNamespace = io.on("/bluepill");
+const bluePillNamespace = io.of("/bluepill");
 
 bluePillNamespace.on("connection", (socket) => {
     if (cachedArticlesbluepill) {
         console.log("Sending cached articles in response to 'requestArticles' event.");
-        socket.emit("bluepillarticles", cachedArticles);
+        socket.emit("bluepillarticles", cachedArticlesbluepill);
       } else {
         console.log("No cached articles. Fetching articles...");
         fetchArticles("entertainment")
@@ -62,8 +62,8 @@ bluePillNamespace.on("connection", (socket) => {
           });
       }
     });
-    
-const redpillNamespace = io.on("/redpill");
+
+const redpillNamespace = io.of("/redpill");
 redpillNamespace.on("connection", (socket) => {
     if(cachedArticlesredpill){
         socket.emit("redpillarticles", cachedArticlesredpill);

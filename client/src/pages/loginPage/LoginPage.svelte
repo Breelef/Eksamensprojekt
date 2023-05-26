@@ -6,7 +6,7 @@
 	const location = useLocation();
     let username = '';
     let password = '';
-
+    document.body.style.backgroundColor = "#000";
     async function handleSubmit(event) {
         event.preventDefault();
         const data = { username, password };
@@ -45,21 +45,21 @@
         navigate(from, { replace: true });
     }
 </script>
-<form class="form-signin" on:submit={handleSubmit}>
+<form class="form-signin flex flex-col items-center" on:submit={handleSubmit}>
     <img src="/matrixlogo.png" class="mb-4" width="500" height="300" alt="">
-        <div class="grid gap-6 mb-6 md:grid-cols-2">
-            <div>
-                <Label for="inputUsername" class="mb-2">Username</Label>
-                <Input type="text" bind:value={username} name="username" id="inputUsername"  style="width: 250px;" required placeholder="Enter your username here" />
-            </div>
-            <div>
-                <Label for="inputPassword" class="mb-2">Password</Label>
-                <Input type="password" bind:value={password} name="password" id="inputPassword" style="width: 250px;" required placeholder="Enter your password here"/>
-            </div>
-        </div>
+    <div class="gap-6">
+      <div class="flex flex-col items-center">
+        <Label for="inputUsername" class="mb-2 text-green-500">Username</Label>
+        <Input defaultClass="bg-slate-950 text-green-500 text-bold appearance-none" type="text" bind:value={username} name="username" id="inputUsername" style="width: 300px;" required placeholder="Enter your username here" />
+      </div>
+      <div class="flex flex-col items-center mb-4">
+        <Label for="inputPassword" class="mb-2 text-green-500">Password</Label>
+        <Input defaultClass="bg-slate-950 text-green-500 text-bold" type="password" bind:value={password} name="password" id="inputPassword" style="width: 300px;" required placeholder="Enter your password here" />
+      </div>
+    </div>
     <Checkbox class="mb-6 space-x-1" required>I agree with the <A href="/">terms and conditions</A>.</Checkbox>
-    <Button type="submit">Log in</Button>
+    <Button btnClass="bg-green-600 text-white px-4 py-2 rounded" type="submit">Log in</Button>
 </form>
 <br>
-<p>Have you not signed up yet?</p>
-<Button on:click={handleSignUp}>Sign up</Button>
+<p class="mb-3">Have you not signed up yet?</p>
+<Button btnClass="bg-green-600 text-white px-4 py-2 rounded"color="green" on:click={handleSignUp}>Sign up</Button>

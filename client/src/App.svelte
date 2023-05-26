@@ -19,6 +19,7 @@
   <PrivateRoute path="/frontpageRedpill" let:location>
     <RedPillPage />
   </PrivateRoute>
+  
   <Route path="/signup" component={SignupPage} />
 </Router>
 

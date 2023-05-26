@@ -8,6 +8,7 @@
     import { onMount } from "svelte";
 
     let socket;
+    document.body.style.backgroundColor = "#F61A26";
 
     onMount(() => {
         socket = io("localhost:8080/redpill");
@@ -27,7 +28,7 @@
         socket.emit("requestArticlesbluepill");
     }
 </script>
-<h1>This is redpill page</h1>
+<h1 class="text-white">This is redpill page</h1>
 <button on:click={handleArticles}>Fetch Articles</button>
 <div class="flex flex-wrap">
     {#each $ArticleListRedpill as article (article.key)}

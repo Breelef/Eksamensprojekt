@@ -1,6 +1,7 @@
 <script>
     import { BASE_URL } from "../../../store/globalStore.js";
     import { useNavigate, useLocation } from "svelte-navigator";
+    import { Label, Input, Button } from "flowbite-svelte";
     const navigate = useNavigate();
 	const location = useLocation();
     let email = '';
@@ -30,30 +31,17 @@
 <form class="form-signin" on:submit={handleSubmit}>
     <img src="/matrixlogo.png" class="mb-4" width="500" height="300" alt="">
     <h1 class="h3 mb-3 font-weight-normal">Please sign up</h1>
-    <div class="mb-2">
-        <label for="inputUsername" class="sr-only">
-        <input type="text" bind:value={email} name="username" id="inputUsername"  style="width: 250px;" required placeholder="Enter your email here" />
-    </label>
+    <div class="mb-2 ">
+        <Label for="inputUsername" class="sr-only">Email</Label>
+        <Input type="text" bind:value={email} name="email" id="inputEmail"  style="width: 500px;" required placeholder="Enter your email here" />
     </div>
     <div class="mb-2">
-        <label for="inputUsername" class="sr-only">
-        <input type="text" bind:value={username} name="username" id="inputUsername"  style="width: 250px;" required placeholder="Enter your username here" />
-    </label>
+        <Label for="inputUsername" class="sr-only">Username</Label>
+        <Input type="text" bind:value={username} name="username" id="inputUsername"  style="width: 500px;" required placeholder="Enter your username here" />
     </div>
     <div class="mb-1">
-        <label for="inputPassword" class="sr-only">
-        <input type="password" bind:value={password} name="password" id="inputPassword" style="width: 250px;" required placeholder="Enter your password here" />
-        </label>
+        <Label for="inputPassword" class="sr-only">Password</Label>
+        <Input type="password" bind:value={password} name="password" id="inputPassword" style="width: 500px;" required placeholder="Enter your password here" />
     </div>
-    <button class="btn btn-lg btn-inverse btn-primary btn-block" type="submit">Sign up!</button>
+    <Button class="btn btn-lg btn-inverse btn-primary btn-block" type="submit">Sign up!</Button>
   </form>
-
-<style>
-    .btn-primary.btn-inverse {
-    color: #fff;
-    background-image: url("/matrixlogo.png");
-    background-repeat: no-repeat;
-    background-size: 300px 100px;
-    border-color: #0d0208;
-}
-</style>
