@@ -88,6 +88,14 @@ redpillNamespace.on("connection", (socket) => {
             console.error(error);
         });
       }
+    socket.on("Send redpill admin chat messages", (data) => {
+        const messageData = {
+            username: data.username,
+            message: data.message
+        }
+        socket.emit("Redpill admin chat messages", messageData);
+        socket.broadcast.emit("Redpill admin chat messages", messageData);
+    });
 })
 //Signup route
 import signUpRoute from "./routers/signupRoute.js";

@@ -6,6 +6,7 @@
   import SignupPage from "./pages/signupPage/SignupPage.svelte";
   import BluePillPage from "./pages/bluepillpage/BluePillPage.svelte";
   import RedPillPage from "./pages/redpillpage/RedPillPage.svelte";
+  import RedpillAdmin from "./pages/redpillAdmin/RedpillAdmin.svelte";
 </script>
 
 <Router>
@@ -19,7 +20,7 @@
   <PrivateRoute path="/frontpageRedpill" let:location>
     <RedPillPage />
   </PrivateRoute>
-  
+  <Route path="/redpillAdmin" component={RedpillAdmin} />
   <Route path="/signup" component={SignupPage} />
 </Router>
 

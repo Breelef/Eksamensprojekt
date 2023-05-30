@@ -1,17 +1,19 @@
 const APIKEY = "508f13be86a44b23a5d6041b1db7d914";
 const url = "https://newsapi.org/v2/everything";
 const query = "entertainment"
+import { derived } from "svelte/store";
 import { NewsObjectFilter } from "./newsJsonFilter.js";
+import { user } from "../../store/globalStore.js"
 
-async function getNews(){
-    const response = await fetch(url + `?language=en&q=${query}&sortBy=popularity&pageSize=5&apiKey=${APIKEY}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
+export function getNews(){
+    
+    let username = null;
+
+    // Subscribe to the derived store and update the username
+    user.subscribe(($user) => {
+      username = $user ? $user.username : null;
     });
-    const data = await response.json();
-    console.log(data)
-    //console.log(data.articles[0].source.name);
-    //const source = data.articles[0].source;
-    //console.log(source)
+    
+    // Example usage
+    console.log(username); // Output the username
 }
-getNews();

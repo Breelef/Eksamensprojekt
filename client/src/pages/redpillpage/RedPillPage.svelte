@@ -2,7 +2,7 @@
     import { useNavigate, useLocation } from "svelte-navigator";
     const navigate = useNavigate();
 	const location = useLocation();
-    import { Card } from "flowbite-svelte";
+    import { Button } from "flowbite-svelte";
     import { ArticleListRedpill } from "../../../store/globalStore";
     import io, { Socket } from "socket.io-client"
     import { onMount } from "svelte";
@@ -28,7 +28,12 @@
     function handleArticles(){
         socket.emit("requestArticlesbluepill");
     }
+    function adminPage(){
+        const from = ($location.state && $location.state.from) || "/redpillAdmin";
+        navigate(from, { replace: true });
+    }
 </script>
+<Button btnClass="bg-green-600 text-white px-4 py-2 rounded absolute top-0 right-0 mt-4 mr-4"color="green" on:click={adminPage}>Admin</Button>
 <h1 class="text-green-600">This is redpill page</h1>
 <button on:click={handleArticles}>Fetch Articles</button>
 <div class="flex flex-wrap">
