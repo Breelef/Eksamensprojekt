@@ -1,3 +1,16 @@
+import NewsAPI from "newsapi";
+const newsapi = new NewsAPI(process.env.APIKEY)
+function fetchArticlesWithPackage(query, category){
+    newsapi.v2.topHeadlines({
+        q:`${query}`,
+        category: `${category}`,
+        language: 'en',
+        pageSize: 10,
+        sortBy: 'relevancy'
+    });
+}
+console.log(process.env.APIKEY);
+
 async function fetchArticles(query){
     const response = await fetch(process.env.NEWS_URL + `?language=en&q=${query}&pageSize=10&apiKey=${process.env.APIKEY}`, {
         method: 'GET',
@@ -9,4 +22,4 @@ const data = await response.json();
 return data;
 }
 
-export default fetchArticles;
+export default fetchArticlesWithPackage;

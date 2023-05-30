@@ -49,7 +49,7 @@
   }
 </script>
 <div>
-    <h1 class= "mb-3 pb-3">Choose wisely</h1>
+    <h1 class= "mb-3 pb-3 text-green-600">Choose wisely</h1>
     <div class="row">
         <div class= "col-6">
             <img src="/redpill.png" class="mb-4" width="300" height="400" alt="" on:click={() => handleClick(true)} on:keydown={handleImageKeyDown}>

@@ -8,8 +8,19 @@ dotenv.config();
 import bodyParser from "body-parser";
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-import fetchArticles from "./util/fetchArticles.js";
+//import fetchArticles from "./util/fetchArticles.js";
 
+import NewsAPI from "newsapi";
+function fetchArticlesWithPackage(query){
+    const newsapi = new NewsAPI(process.env.APIKEY)
+    return newsapi.v2.everything({
+        q:`${query}`,
+        language: 'en',
+        pageSize: 20,
+        sortBy: 'relevancy',
+        excludeDomains: 'lifehacker.com, cnet.com, 9to5mac.com'
+    });
+}
 
 import session from "express-session";
 app.use(session({
@@ -51,7 +62,7 @@ bluePillNamespace.on("connection", (socket) => {
         socket.emit("bluepillarticles", cachedArticlesbluepill);
       } else {
         console.log("No cached articles. Fetching articles...");
-        fetchArticles("entertainment")
+        fetchArticlesWithPackage('sports OR movies OR "TV shows" OR celebrities OR "new record" -strike')
           .then((articles) => {
             cachedArticlesbluepill = articles;
             console.log("Articles fetched. Sending articles in response to 'requestArticles' event.");
@@ -68,7 +79,7 @@ redpillNamespace.on("connection", (socket) => {
     if(cachedArticlesredpill){
         socket.emit("redpillarticles", cachedArticlesredpill);
       }else{
-        fetchArticles("terror")
+        fetchArticlesWithPackage('war OR terror OR oppression OR conflict')
         .then((articles) => {
             cachedArticlesredpill = articles;
             socket.emit("redpillarticles", articles);

@@ -8,7 +8,7 @@
     import { onMount } from "svelte";
 
     let socket;
-    document.body.style.backgroundColor = "#F61A26";
+    
 
     onMount(() => {
         socket = io("localhost:8080/redpill");
@@ -23,22 +23,26 @@
             console.log($ArticleListRedpill);
         });
         socket.emit("requestArticlesredpill");
+        document.body.style.backgroundColor = "#000";
     });
     function handleArticles(){
         socket.emit("requestArticlesbluepill");
     }
 </script>
-<h1 class="text-white">This is redpill page</h1>
+<h1 class="text-green-600">This is redpill page</h1>
 <button on:click={handleArticles}>Fetch Articles</button>
 <div class="flex flex-wrap">
     {#each $ArticleListRedpill as article (article.key)}
-        <Card class="relative m-2">
-            <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white pb-3">{article.title}</h5>
-            <h5 class="mb-2 text-lg tracking-tight text-gray-900 dark:text-white pb-3">{article.description}</h5>
-            <p class="absolute bottom-0 left-0 m-2 text-gray-500">{article.publishedAt}</p>
-            <a href="{decodeURIComponent(article.url)}" target="_blank" class="inline-flex items-center text-blue-600 hover:underline absolute bottom-0 right-0 mr-5 mb-2">
-                Go to article
-            </a>
-        </Card>
+            <div class="dark:bg-gray-800 text-gray-500 dark:text-gray-400 rounded-lg dark:border-gray-700 shadow-md flex max-w-sm flex-col relative m-2" style="background-color: #1CA152;">
+                <img class="rounded-t-lg" src="{decodeURIComponent(article.urlToImage)}" alt="">
+                <div class="p-4 sm:p-6">
+                    <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white pb-3">{article.title}</h5>
+                    <h5 class="mb-2 text-lg tracking-tight text-gray-900 dark:text-white pb-3">{article.description}</h5>
+                    <p class="absolute bottom-0 left-0 m-2 text-gray-500">{article.publishedAt}</p>
+                    <a href="{decodeURIComponent(article.url)}" target="_blank" class="inline-flex items-center text-black hover:underline absolute bottom-0 right-0 mr-5 mb-2">
+                    Go to article
+                    </a>
+                </div>
+            </div> 
     {/each}
 </div>
