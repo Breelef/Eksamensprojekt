@@ -9,6 +9,27 @@
     let username = '';
     let password = '';
 
+    let isEmailUsed = false;
+    let isUsernameUsed = false;
+
+    async function checkAvailability(){
+        const data = { email, username}
+        try{
+            const result = await fetch($BASE_URL + "/users/checkAvailability", {
+                method: "POST",
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+            if(result.status === 200){
+                const { emailUsed, usernameUsed } = await result.json();
+                isEmailUsed = emailUsed;
+                isUsernameUsed = usernameUsed;
+            }
+        }catch(error){
+            console.error(error)
+        }
+    }
+
     async function handleSubmit(event) {
         event.preventDefault();
         const data = { email, username, password };

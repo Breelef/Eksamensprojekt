@@ -16,3 +16,14 @@ CREATE TABLE IF NOT EXISTS users (
     hasChosen BOOLEAN
 );
 `);
+db.exec(`
+CREATE TABLE IF NOT EXISTS articles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT,
+    description TEXT,
+    publishedAt DATETIME,
+    image BLOB,
+    publisherID INTEGER,
+    FOREIGN KEY(publisher) REFERENCES users(id)
+    );
+`);
