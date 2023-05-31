@@ -25,7 +25,19 @@ function constructMail(email, name){
     return message;
 }
 
-router.post("/signup", async (req, res) => {
+router.get("/users", async (req, res) => {
+    const result = await db.run("SELECT * FROM users");
+    const response = result.rows;
+    res.json(response);
+});
+
+router.get("/users/:username", async (req, res) => {
+    const username = req.params.username;
+    const result = await db.run("SELECT * FROM users WHERE username=?", [username]);
+    res.json(result);
+});
+
+router.post("/users", async (req, res) => {
     const { email, username, password } = req.body;
     try{
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -47,6 +59,51 @@ router.post("/signup", async (req, res) => {
     }catch(error){
         console.error(error);
         res.status(500).json({ error: 'An error occured' });
+    }
+});
+
+router.put("/users", async (req, res) => {
+    const user = req.session.user;
+    if (user) {
+        const username = user.username;
+        const { hasChosen, choice } = req.body;
+        await db.run("UPDATE users SET hasChosen = ?, choice = ? WHERE username = ?", [
+          hasChosen,
+          choice,
+          username
+        ]);
+
+        res.send({ message: `User is updated: ${username}`});
+      } else {
+        res.status(401).send({ message: "User not authenticated." });
+      }
+})
+
+router.patch("/users/:username", async (req, res) => {
+    const { password, confirmPassword } = req.body
+    const username = req.params.username;
+    if(password === confirmPassword){
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const result = db.run("UPDATE users SET password=? WHERE username=?", [hashedPassword, username]);
+        res.send({
+            id: result.lastID,
+            username: username,
+            message: "Password updated" 
+        });
+    }else{
+        res.send({ message: "Passwords are not the same"})
+    }
+});
+
+router.delete("/users/:username", async (req, res) => {
+    const username = req.params.username;
+    try{
+        const result = db.run("DELETE * FROM users WHERE username=?", [username])
+        console.log(result)
+        res.status(200).json({ message: `User: ${username} is deleted`})
+    }catch(error){
+        console.error(error);
+        res.status(500).json({error: "Error occured. User not deleted"})
     }
 });
 

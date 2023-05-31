@@ -13,7 +13,7 @@
         }else{
             user.set({ hasChosen: data.hasChosen, choice: 0 });
         }
-        await fetch($BASE_URL + "/pillTaken", {
+        await fetch($BASE_URL + "/users", {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',

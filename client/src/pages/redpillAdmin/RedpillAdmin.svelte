@@ -1,8 +1,9 @@
 <script>
     import io, { Socket } from "socket.io-client"
-    import { onMount } from "svelte";
+    import { onMount, afterUpdate } from "svelte";
     import { chatMessagesRedpill, user } from "../../../store/globalStore";
     import { derived } from "svelte/store";
+    import { Button, Input } from "flowbite-svelte";
 
     let socket;
     let newMessage = "";
@@ -32,6 +33,11 @@
       sendChatMessage();
     }
   }
+  let chatContainer;
+
+  afterUpdate(() => {
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+  });
 
 </script>
 <style>
@@ -45,15 +51,15 @@
     }
   </style>
   <h1>This is redpill admin</h1>
-  <div class="chat-container bg-gray-100 p-4">
+  <div class="chat-container bg-slate-950 p-4" bind:this={chatContainer}>
     {#each $chatMessagesRedpill as message}
-      <div class="message bg-white p-2 rounded mb-2">
+      <div class="message bg-green-600 p-2 rounded mb-2">
         <strong>{message.username}:</strong> {message.message}
       </div>
     {/each}
   </div>
   
   <div class="flex items-center mt-4">
-    <input type="text" class="rounded-l p-2 flex-grow border border-gray-300" bind:value="{newMessage}" placeholder="Type your message..." />
-    <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-r" on:click="{sendChatMessage}" on:keydown={handleKeyDown}>Send</button>
+    <Input defaultClass="bg-slate-950 text-green-500 text-bold" type="text" bind:value={newMessage} name="message" style="width: 300px;" placeholder="Message...." />
+    <Button btnClass="bg-green-600 text-white px-4 py-2 rounded" on:click="{sendChatMessage}" on:keydown={handleKeyDown}>Send</Button>
   </div>

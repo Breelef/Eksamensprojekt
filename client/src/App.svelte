@@ -1,12 +1,12 @@
 <script>
   import { Router, Link, Route } from "svelte-navigator";
-  import LoginPage from "./pages/loginPage/LoginPage.svelte";
-  import TakePillPage from "./pages/takepill/TakePill.svelte";
+  import LoginPage from "./pages/LoginPage/LoginPage.svelte";
+  import TakePillPage from "./pages/Takepill/TakePill.svelte";
   import PrivateRoute from "./PrivateRoute.svelte";
-  import SignupPage from "./pages/signupPage/SignupPage.svelte";
-  import BluePillPage from "./pages/bluepillpage/BluePillPage.svelte";
-  import RedPillPage from "./pages/redpillpage/RedPillPage.svelte";
-  import RedpillAdmin from "./pages/redpillAdmin/RedpillAdmin.svelte";
+  import SignupPage from "./pages/SignupPage/SignupPage.svelte";
+  import BluePillPage from "./pages/Bluepillpage/BluePillPage.svelte";
+  import RedPillPage from "./pages/Redpillpage/RedPillPage.svelte";
+  import RedpillAdmin from "./pages/RedpillAdmin/RedpillAdmin.svelte";
 </script>
 
 <Router>

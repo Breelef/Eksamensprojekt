@@ -97,21 +97,18 @@ redpillNamespace.on("connection", (socket) => {
         socket.broadcast.emit("Redpill admin chat messages", messageData);
     });
 })
-//Signup route
-import signUpRoute from "./routers/signupRoute.js";
-app.use(signUpRoute);
+//Users API
+import usersRoutes from "./routers/usersRoutes.js";
+app.use(usersRoutes);
 
-//Login & Logout Routes
-import loginRoute from "./routers/loginRoute.js";
-app.use(loginRoute);
+//Auth Routes
+import authRoute from "./routers/authRouter.js";
+app.use(authRoute);
 
 //Frontpage Route
 import frontPageRoute from "./routers/frontpageRoute.js";
 app.use(frontPageRoute);
 
-//Pill taken API
-import updateUser from "./routers/updateUser.js";
-app.use(updateUser);
 
 
 //fetchArticles();
