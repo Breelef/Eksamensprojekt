@@ -12,22 +12,33 @@
     let isEmailUsed = false;
     let isUsernameUsed = false;
 
+    let timeoutID = null;
+
+
     async function checkAvailability(){
-        const data = { email, username}
-        try{
-            const result = await fetch($BASE_URL + "/users/checkAvailability", {
-                method: "POST",
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(data)
-            });
-            if(result.status === 200){
-                const { emailUsed, usernameUsed } = await result.json();
-                isEmailUsed = emailUsed;
-                isUsernameUsed = usernameUsed;
-            }
-        }catch(error){
-            console.error(error)
+        if(timeoutID) {
+            clearTimeout(timeoutID);
         }
+        timeoutID = setTimeout(async () => {
+            const data = { email, username}
+            console.log(data);
+            try{
+                const result = await fetch($BASE_URL + "/users/checkAvailability", {
+                    method: "POST",
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data),
+                });
+                if(result.status === 200){
+                    const { emailUsed, usernameUsed } = await result.json();
+                    isEmailUsed = emailUsed;
+                    isUsernameUsed = usernameUsed;
+                }
+
+            }catch(error){
+                console.error(error)
+            }
+            timeoutID = null;
+        }, 1500)
     }
 
     async function handleSubmit(event) {
@@ -43,12 +54,21 @@
                     const from = ($location.state && $location.state.from) || "/";
                     navigate(from, { replace: true });
                 }else {
-                    alert('Invalid username or password');
+                    alert("Not valid credentials")
                 }
         }catch(error){
             console.error(error);
         } 
     };
+    function handleUsernameInput(){
+        isUsernameUsed = false;
+        checkAvailability();
+    }
+
+    function handleEmailInput(){
+        isEmailUsed = false;
+        checkAvailability();
+    }
     onMount(() => {
         document.body.style.backgroundColor = "#000";
     })
@@ -58,11 +78,17 @@
     <div class="gap-6">
         <div class="flex flex-col items-center">
             <Label for="inputEmail" class="mb-2 text-green-500">Email</Label>
-            <Input defaultClass="bg-slate-950 text-green-500 text-bold appearance-none" type="text" bind:value={email} name="email" id="inputEmail" style="width: 300px;" required placeholder="Enter your Email here" />
+            <Input defaultClass="bg-slate-950 text-green-500 text-bold appearance-none" type="text" bind:value={email} name="email" id="inputEmail" style="width: 300px;" required placeholder="Enter your Email here" on:input={handleEmailInput} />
+            {#if isEmailUsed}
+                <p class="text-red-500">Email is already used.</p>
+            {/if}
           </div>
         <div class="flex flex-col items-center">
             <Label for="inputUsername" class="mb-2 text-green-500">Username</Label>
-            <Input defaultClass="bg-slate-950 text-green-500 text-bold appearance-none" type="text" bind:value={username} name="username" id="inputUsername" style="width: 300px;" required placeholder="Enter your username here" />
+            <Input defaultClass="bg-slate-950 text-green-500 text-bold appearance-none" type="text" bind:value={username} name="username" id="inputUsername" style="width: 300px;" required placeholder="Enter your username here" on:input={handleUsernameInput} />
+            {#if isUsernameUsed}
+                <p class="text-red-500">Username is already taken.</p>
+            {/if}
         </div>
         <div class="flex flex-col items-center mb-4">
             <Label for="inputPassword" class="mb-2 text-green-500">Password</Label>

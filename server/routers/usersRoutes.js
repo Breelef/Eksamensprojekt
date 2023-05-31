@@ -26,16 +26,32 @@ function constructMail(email, name){
 }
 
 router.get("/users", async (req, res) => {
-    const result = await db.run("SELECT * FROM users");
+    const result = await db.get("SELECT * FROM users");
     const response = result.rows;
     res.json(response);
 });
 
 router.get("/users/:username", async (req, res) => {
     const username = req.params.username;
-    const result = await db.run("SELECT * FROM users WHERE username=?", [username]);
+    const result = await db.get("SELECT * FROM users WHERE username=?", [username]);
     res.json(result);
 });
+
+router.post("/users/checkAvailability", async (req, res) => {
+    const { email, username } = req.body
+    try {
+        const existingUsername = await db.get("SELECT * FROM users WHERE username=?", [username]);
+        const existingEmail = await db.get("SELECT * FROM users WHERE email=?", [email]);
+        console.log(existingEmail, existingUsername);
+        res.json({
+            emailUsed: !!existingEmail,
+            usernameUsed: !!existingUsername
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "An error occured" });
+    } 
+})
 
 router.post("/users", async (req, res) => {
     const { email, username, password } = req.body;
