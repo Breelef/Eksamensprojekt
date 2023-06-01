@@ -1,5 +1,5 @@
 <script>
-    import { BASE_URL } from "../../../store/globalStore.js";
+    import { BASE_URL, isEmailUsed, isUsernameUsed } from "../../../store/globalStore.js";
     import { useNavigate, useLocation } from "svelte-navigator";
     import { Label, Input, Button, Checkbox, A } from "flowbite-svelte";
     const navigate = useNavigate();
@@ -9,8 +9,6 @@
     let username = '';
     let password = '';
 
-    let isEmailUsed = false;
-    let isUsernameUsed = false;
 
     let timeoutID = null;
 
@@ -30,8 +28,8 @@
                 });
                 if(result.status === 200){
                     const { emailUsed, usernameUsed } = await result.json();
-                    isEmailUsed = emailUsed;
-                    isUsernameUsed = usernameUsed;
+                    isEmailUsed.set(emailUsed);
+                    isUsernameUsed.set(usernameUsed);
                 }
 
             }catch(error){
@@ -61,12 +59,12 @@
         } 
     };
     function handleUsernameInput(){
-        isUsernameUsed = false;
+        isUsernameUsed.set(false);
         checkAvailability();
     }
 
     function handleEmailInput(){
-        isEmailUsed = false;
+        isEmailUsed.set(false);
         checkAvailability();
     }
     onMount(() => {
@@ -79,14 +77,14 @@
         <div class="flex flex-col items-center">
             <Label for="inputEmail" class="mb-2 text-green-500">Email</Label>
             <Input defaultClass="bg-slate-950 text-green-500 text-bold appearance-none" type="text" bind:value={email} name="email" id="inputEmail" style="width: 300px;" required placeholder="Enter your Email here" on:input={handleEmailInput} />
-            {#if isEmailUsed}
+            {#if $isEmailUsed}
                 <p class="text-red-500">Email is already used.</p>
             {/if}
           </div>
         <div class="flex flex-col items-center">
             <Label for="inputUsername" class="mb-2 text-green-500">Username</Label>
             <Input defaultClass="bg-slate-950 text-green-500 text-bold appearance-none" type="text" bind:value={username} name="username" id="inputUsername" style="width: 300px;" required placeholder="Enter your username here" on:input={handleUsernameInput} />
-            {#if isUsernameUsed}
+            {#if $isUsernameUsed}
                 <p class="text-red-500">Username is already taken.</p>
             {/if}
         </div>
@@ -95,6 +93,6 @@
             <Input defaultClass="bg-slate-950 text-green-500 text-bold" type="password" bind:value={password} name="password" id="inputPassword" style="width: 300px;" required placeholder="Enter your password here" />
         </div>
     </div>
-    <Checkbox class="mb-6 space-x-1 text-green-500" required>I agree with the <A href="/">terms and conditions</A>.</Checkbox>
+    <Checkbox class="mb-6 space-x-1 text-green-500" required>I agree with the <A href="https://www.dr.dk/drtv/ramasjang">terms and conditions</A>.</Checkbox>
     <Button btnClass="bg-green-600 text-white px-4 py-2 rounded" type="submit">Sign Up!</Button>
 </form>

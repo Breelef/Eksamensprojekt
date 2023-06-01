@@ -5,7 +5,7 @@ import dotenv from "dotenv"
 dotenv.config();
 
 
-router.get("/frontpage", guard, (req, res) => {
+router.get("/pageGuard", guard, (req, res) => {
     res.send({message: `Welcome ${req.session.user}.`});
 });
 

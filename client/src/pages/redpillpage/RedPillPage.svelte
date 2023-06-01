@@ -4,7 +4,7 @@
 	const location = useLocation();
     import { Button } from "flowbite-svelte";
     import { ArticleListRedpill } from "../../../store/globalStore";
-    import io, { Socket } from "socket.io-client"
+    import io from "socket.io-client"
     import { onMount } from "svelte";
 
     let socket;

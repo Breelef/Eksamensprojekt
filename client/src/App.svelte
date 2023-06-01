@@ -7,6 +7,7 @@
   import BluePillPage from "./pages/Bluepillpage/BluePillPage.svelte";
   import RedPillPage from "./pages/Redpillpage/RedPillPage.svelte";
   import RedpillAdmin from "./pages/RedpillAdmin/RedpillAdmin.svelte";
+  import ForgotPassword from "./pages/ForgotPassword/ForgotPassword.svelte";
 </script>
 
 <Router>
@@ -20,7 +21,10 @@
   <PrivateRoute path="/frontpageRedpill" let:location>
     <RedPillPage />
   </PrivateRoute>
-  <Route path="/redpillAdmin" component={RedpillAdmin} />
+  <PrivateRoute path="/redpillAdmin" let:location>
+      <RedpillAdmin />
+  </PrivateRoute>
+  <Route path="/forgotpassword" component={ForgotPassword} />
   <Route path="/signup" component={SignupPage} />
 </Router>
 

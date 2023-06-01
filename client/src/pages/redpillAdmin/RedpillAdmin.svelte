@@ -1,5 +1,5 @@
 <script>
-    import io, { Socket } from "socket.io-client"
+    import io from "socket.io-client"
     import { onMount, afterUpdate } from "svelte";
     import { chatMessagesRedpill, user } from "../../../store/globalStore";
     import { derived } from "svelte/store";

@@ -1,8 +1,33 @@
 <script>
     import { BASE_URL, user } from "../../../store/globalStore";
     import { useNavigate, useLocation } from "svelte-navigator";
+    import { onMount } from "svelte"
+
     const navigate = useNavigate();
 	const location = useLocation();
+
+    async function checkSession() {
+    try {
+      const response = await fetch(`${BASE_URL}/pageGuard`, {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        // Session is valid, allow access to the page
+        const data = await response.json();
+        console.log("User is logged in:", data);
+      } else {
+        // Session is not valid, redirect to login page or show an error message
+        console.log("User is not logged in");
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("Error checking session:", error);
+    }
+  }
+  onMount(checkSession);
+  
     async function handleClick(value){
         const data = {
             hasChosen: true,

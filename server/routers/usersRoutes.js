@@ -13,7 +13,7 @@ let transporter = nodemailer.createTransport({
         pass: "zdqfzsummdxctikc"
     }
 });
-function constructMail(email, name){
+function constructWelcomeMail(email, name){
     
     let message = {
         from: "emil_vinther@hotmail.com",
@@ -42,7 +42,6 @@ router.post("/users/checkAvailability", async (req, res) => {
     try {
         const existingUsername = await db.get("SELECT * FROM users WHERE username=?", [username]);
         const existingEmail = await db.get("SELECT * FROM users WHERE email=?", [email]);
-        console.log(existingEmail, existingUsername);
         res.json({
             emailUsed: !!existingEmail,
             usernameUsed: !!existingUsername
@@ -58,7 +57,7 @@ router.post("/users", async (req, res) => {
     try{
         const hashedPassword = await bcrypt.hash(password, 10);
         const result = await db.run("INSERT INTO users (email, username, password, choice, hasChosen) VALUES (?,?,?,?,?)", [email, username, hashedPassword, null, false]);
-        const message = constructMail(email, username);
+        const message = constructWelcomeMail(email, username);
         transporter.sendMail(message, (err, info) => {
             if(err){
                 console.log("Error sending mail", err)
@@ -95,15 +94,18 @@ router.put("/users", async (req, res) => {
       }
 })
 
-router.patch("/users/:username", async (req, res) => {
+router.patch("/users/:email", async (req, res) => {
     const { password, confirmPassword } = req.body
-    const username = req.params.username;
+    const email = req.params.email;
+    console.log("New password: ", password);
+    console.log("New confirm password: ", confirmPassword);
+    console.log("Email: ", email);
     if(password === confirmPassword){
         const hashedPassword = await bcrypt.hash(password, 10);
-        const result = db.run("UPDATE users SET password=? WHERE username=?", [hashedPassword, username]);
+        const result = db.run("UPDATE users SET password=? WHERE email=?", [hashedPassword, email]);
         res.send({
             id: result.lastID,
-            username: username,
+            email: email,
             message: "Password updated" 
         });
     }else{
