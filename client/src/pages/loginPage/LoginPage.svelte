@@ -1,7 +1,8 @@
 <script>
-    import { BASE_URL, user } from "../../../store/globalStore.js";
+    import { BASE_URL, user, isAuthenticated } from "../../../store/globalStore.js";
     import { useNavigate, useLocation } from "svelte-navigator";
     import { Input, Label, Helper, Checkbox, Button, A } from 'flowbite-svelte';
+    import { checkSession } from "../../utils/sessionUtil.js";
     const navigate = useNavigate();
 	const location = useLocation();
     let username = '';
@@ -27,10 +28,10 @@
                         navigate(from, { replace: true });
                     }else{
                         if(userObject.choice === 1){
-                        const from = ($location.state && $location.state.from) || "/frontpageRedpill";
+                        const from = ($location.state && $location.state.from) || "/redpill/frontpage";
                         navigate(from, { replace: true });
                     }else{
-                        const from = ($location.state && $location.state.from) || "/frontpageBluepill";
+                        const from = ($location.state && $location.state.from) || "/bluepill/frontpage";
                         navigate(from, { replace: true });
                     }
                 }
@@ -41,13 +42,21 @@
             console.error(error);
         }
     };
-    function handleSignUp(){
-        const from = ($location.state && $location.state.from) || "/signup";
-        navigate(from, { replace: true });
-    }
     onMount(() => {
         document.body.style.backgroundColor = "#000";
-    })
+        let unsub = isAuthenticated.subscribe(value => {
+            if (value) {
+            user.subscribe(userObject => {
+                if(userObject.choice === 1){
+                    navigate("/redpill/frontpage");
+                }else{
+                    navigate("/bluepill/frontpage");
+                }
+            })();
+            }
+        });
+        return unsub; 
+    });
 </script>
 <form class="form-signin flex flex-col items-center" on:submit={handleSubmit}>
     <img src="/matrixlogo.png" class="mb-4" width="500" height="300" alt="">
@@ -63,5 +72,5 @@
     </div>
     <Button btnClass="bg-green-600 text-white px-4 py-2 rounded" type="submit">Log in</Button>
 </form>
-<A class="text-green-500 mt-4" href="/forgotpassword">Forgot password?</A>
-<Button btnClass="bg-green-600 text-white px-4 py-2 rounded absolute top-0 right-0 mt-4 mr-4"color="green" on:click={handleSignUp}>Sign up</Button>
+<Button btnClass="bg-green-600 text-black px-4 py-2 rounded mt-7" on:click={() => navigate("/forgotpassword")}>Forgot password?</Button>
+<Button btnClass="bg-green-600 text-white px-4 py-2 rounded absolute top-0 right-0 mt-4 mr-4"color="green" on:click={() => navigate("/signup")}>Sign up</Button>

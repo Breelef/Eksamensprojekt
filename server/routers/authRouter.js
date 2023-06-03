@@ -13,7 +13,8 @@ router.post("/login", async (req, res) => {
         if(user && isSame){
             req.session.user = {
                 username: username,
-                email: user.email
+                email: user.email,
+                choice: user.choice
             };
             const hasChosen = user.hasChosen;
             const choice = user.choice;
@@ -29,6 +30,7 @@ router.post("/login", async (req, res) => {
 });
 
 router.get("/logout", (req, res) => {
+    
     if (req.session.user) {
         delete req.session.user;
         res.send({ message: "User is logged out" });

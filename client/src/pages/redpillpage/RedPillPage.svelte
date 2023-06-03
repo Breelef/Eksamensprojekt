@@ -14,13 +14,11 @@
         socket = io("localhost:8080/redpill");
 
         socket.on("redpillarticles", (data) => {
-            console.log(data);
             const articles = data.articles.map((article, index) => ({
                 ...article,
                 key: index.toString()
             }));
             ArticleListRedpill.set(articles);
-            console.log($ArticleListRedpill);
         });
         socket.emit("requestArticlesredpill");
         document.body.style.backgroundColor = "#000";
@@ -29,7 +27,7 @@
         socket.emit("requestArticlesbluepill");
     }
     function adminPage(){
-        const from = ($location.state && $location.state.from) || "/redpillAdmin";
+        const from = ($location.state && $location.state.from) || "/redpill/admin";
         navigate(from, { replace: true });
     }
 </script>

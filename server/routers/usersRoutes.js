@@ -97,9 +97,6 @@ router.put("/users", async (req, res) => {
 router.patch("/users/:email", async (req, res) => {
     const { password, confirmPassword } = req.body
     const email = req.params.email;
-    console.log("New password: ", password);
-    console.log("New confirm password: ", confirmPassword);
-    console.log("Email: ", email);
     if(password === confirmPassword){
         const hashedPassword = await bcrypt.hash(password, 10);
         const result = db.run("UPDATE users SET password=? WHERE email=?", [hashedPassword, email]);
@@ -116,8 +113,7 @@ router.patch("/users/:email", async (req, res) => {
 router.delete("/users/:username", async (req, res) => {
     const username = req.params.username;
     try{
-        const result = db.run("DELETE * FROM users WHERE username=?", [username])
-        console.log(result)
+        const result = await db.run("DELETE * FROM users WHERE username=?", [username])
         res.status(200).json({ message: `User: ${username} is deleted`})
     }catch(error){
         console.error(error);

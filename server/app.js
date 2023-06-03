@@ -5,9 +5,7 @@ import helmet from "helmet"
 app.use(helmet());
 import dotenv from "dotenv"
 dotenv.config();
-import bodyParser from "body-parser";
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
+
 //import fetchArticles from "./util/fetchArticles.js";
 
 import NewsAPI from "newsapi";
@@ -106,17 +104,15 @@ import authRoute from "./routers/authRouter.js";
 app.use(authRoute);
 
 //Frontpage Route
-import frontPageRoute from "./routers/frontpageRoute.js";
-app.use(frontPageRoute);
+import pageGuard from "./routers/pageGuardRoute.js";
+app.use(pageGuard);
 
 
-
-//fetchArticles();
 
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, (error) => {
     if(error){
-        console.log(error)
+        console.error(error)
         return;
     }
     console.log("Server is running on:", PORT);

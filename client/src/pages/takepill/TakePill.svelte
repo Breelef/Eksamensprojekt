@@ -55,21 +55,16 @@
             console.error(error);
         });
         if(value){
-            console.log("You are now redpilled");
-            const from = ($location.state && $location.state.from) || "/frontpageRedpill";
+            const from = ($location.state && $location.state.from) || "/redpill/frontpage";
             navigate(from, { replace: true });
-            }else {
-            console.log("You remain blue pilled");
-            const from = ($location.state && $location.state.from) || "/frontpageBluepill";
+            }else { 
+            const from = ($location.state && $location.state.from) || "/bluepill/frontpage";
             navigate(from, { replace: true });
         }
     }
     function handleImageKeyDown(event) {
-    // Handle the keydown event here
-    // You can check for a specific key, like Enter, using event.key
     if (event.key === "Enter") {
-      console.log("Enter key pressed on the image!");
-      // Perform your desired action or update component state
+        
     }
   }
 </script>
