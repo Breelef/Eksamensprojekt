@@ -24,9 +24,11 @@
 		try {
 			const userData = await checkSession($BASE_URL);
 			if (userData) {
-				if (userData.choice === 1 && locationValue.pathname.includes("redpill/")) {
+				if (userData.hasChosen === 0 || userData.hasChosen === false && locationValue.pathname === "/takePill") {
+                	return true;
+				} else if (userData.choice === 1 || userData.choice === true && locationValue.pathname.includes("redpill/")) {
 					return true;
-				} else if (userData.choice === 0 && locationValue.pathname.includes("bluepill/")) {
+				} else if (userData.choice === 0 || userData.choice === false && locationValue.pathname.includes("bluepill/")) {
 					return true;
 				}
 			}

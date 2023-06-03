@@ -1,10 +1,7 @@
 <script>
-    import { useNavigate, useLocation } from "svelte-navigator";
     import { Card } from "flowbite-svelte";
     import { ArticleListBluePill } from "../../../store/globalStore";
-    const navigate = useNavigate();
-	const location = useLocation();
-    import io, { Socket } from "socket.io-client"
+    import io from "socket.io-client"
     import { onMount } from "svelte";
 
     let socket;
@@ -13,23 +10,16 @@
         socket = io("localhost:8080/bluepill");
 
         socket.on("bluepillarticles", (data) => {
-            console.log(data);
             const articles = data.articles.map((article, index) => ({
                 ...article,
                 key: index.toString()
             }));
             ArticleListBluePill.set(articles);
-            console.log($ArticleListBluePill);
         });
         socket.emit("requestArticlesbluepill");
     });
-    function handleArticles(){
-        socket.emit("requestArticlesbluepill");
-    }
 
 </script>
-<h1>This is blue pill page</h1>
-<button on:click={handleArticles}>Fetch Articles</button>
 <div class="flex flex-wrap">
     {#each $ArticleListBluePill as article (article.key)}
         <Card class="relative m-2" img="{decodeURIComponent(article.urlToImage)}">

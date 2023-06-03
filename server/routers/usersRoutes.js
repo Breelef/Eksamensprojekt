@@ -87,7 +87,11 @@ router.put("/users", async (req, res) => {
           choice,
           username
         ]);
-
+        req.session.user = {
+            username: username,
+            choice: choice,
+            hasChosen: hasChosen
+        };
         res.send({ message: `User is updated: ${username}`});
       } else {
         res.status(401).send({ message: "User not authenticated." });

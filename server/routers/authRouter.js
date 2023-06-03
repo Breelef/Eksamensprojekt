@@ -13,8 +13,8 @@ router.post("/login", async (req, res) => {
         if(user && isSame){
             req.session.user = {
                 username: username,
-                email: user.email,
-                choice: user.choice
+                choice: user.choice,
+                hasChosen: user.hasChosen
             };
             const hasChosen = user.hasChosen;
             const choice = user.choice;

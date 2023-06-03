@@ -56,14 +56,11 @@ const bluePillNamespace = io.of("/bluepill");
 
 bluePillNamespace.on("connection", (socket) => {
     if (cachedArticlesbluepill) {
-        console.log("Sending cached articles in response to 'requestArticles' event.");
         socket.emit("bluepillarticles", cachedArticlesbluepill);
       } else {
-        console.log("No cached articles. Fetching articles...");
         fetchArticlesWithPackage('sports OR movies OR "TV shows" OR celebrities OR "new record" -strike')
           .then((articles) => {
             cachedArticlesbluepill = articles;
-            console.log("Articles fetched. Sending articles in response to 'requestArticles' event.");
             socket.emit("bluepillarticles", articles);
           })
           .catch((error) => {
