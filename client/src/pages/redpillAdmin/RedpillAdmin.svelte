@@ -19,7 +19,7 @@
             chatMessagesRedpill.update((messages) => [...messages, data]);
         });
         getAllBluePillUsers();
-        
+        getUsername();
     });
     async function getAllBluePillUsers(){
       const result = await fetch($BASE_URL + "/users", {
@@ -42,14 +42,18 @@
           }
       });
     }
-
+    async function getUsername(){
+      const userData = await checkSession($BASE_URL);
+      localStorage.setItem('username', userData.username);
+    }
 
     function sendChatMessage(){
         const message = newMessage.trim();
+        const username = localStorage.getItem("username");
         if(newMessage.trim() !== ""){
             const data = {
                 message: message,
-                username: $username
+                username: username
             };
            socket.emit("Send redpill admin chat messages", data); 
            newMessage = "";
@@ -136,8 +140,7 @@
       </Listgroup>
     </div>
   </div>
-
-<Button btnClass="bg-green-600 text-white px-4 py-2 rounded top-0 right-0 mt-4 mr-4" on:click={() => formModal = true}>Write Article</Button>
+<Button btnClass="bg-green-600 text-white px-4 py-2 rounded mt-4 mr-4" on:click={() => formModal = true}>Write Article</Button>
 
 <Modal bind:open={formModal} size="md" autoclose={false} class="w-full" defaultClass="bg-black" style="background-color: black !important; width: 100%;">
   <form class="flex flex-col space-y-6" on:submit={sumbitArticle}>

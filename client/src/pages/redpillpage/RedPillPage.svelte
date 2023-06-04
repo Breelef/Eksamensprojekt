@@ -36,7 +36,7 @@
                 <div class="p-4 sm:p-6">
                     <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white pb-3">{article.title}</h5>
                     <h5 class="mb-2 text-lg tracking-tight text-gray-900 dark:text-white pb-3">{article.description}</h5>
-                    <p class="absolute bottom-0 left-0 m-2 text-gray-500">{article.publishedAt}</p>
+                    <p class="absolute bottom-0 left-0 m-2 text-gray-800">{article.publishedAt}</p>
                     <a href="{decodeURIComponent(article.url)}" target="_blank" class="inline-flex items-center text-black hover:underline absolute bottom-0 right-0 mr-5 mb-2">
                     Go to article
                     </a>

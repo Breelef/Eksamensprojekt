@@ -25,14 +25,14 @@
                     user.set({ username, hasChosen: userObject.hasChosen, choice: userObject.choice });
                     if(userObject.hasChosen === 0){
                         const from = ($location.state && $location.state.from) || "/takePill";
-                        navigate(from, { replace: true });
+                        navigate(from);
                     }else{
                         if(userObject.choice === 1){
                         const from = ($location.state && $location.state.from) || "/redpill/frontpage";
-                        navigate(from, { replace: true });
+                        navigate(from);
                     }else{
                         const from = ($location.state && $location.state.from) || "/bluepill/frontpage";
-                        navigate(from, { replace: true });
+                        navigate(from);
                     }
                 }
                 }else {
