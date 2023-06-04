@@ -6,8 +6,6 @@ app.use(helmet());
 import dotenv from "dotenv"
 dotenv.config();
 
-//import fetchArticles from "./util/fetchArticles.js";
-
 import NewsAPI from "newsapi";
 function fetchArticlesWithPackage(query){
     const newsapi = new NewsAPI(process.env.APIKEY)
@@ -92,19 +90,21 @@ redpillNamespace.on("connection", (socket) => {
         socket.broadcast.emit("Redpill admin chat messages", messageData);
     });
 })
-//Users API
-import usersRoutes from "./routers/usersRoutes.js";
-app.use(usersRoutes);
-
 //Auth Routes
 import authRoute from "./routers/authRouter.js";
 app.use(authRoute);
 
-//Frontpage Route
+//Pageguard Route
 import pageGuard from "./routers/pageGuardRoute.js";
 app.use(pageGuard);
 
+//Users API
+import usersRoutes from "./routers/usersRoutes.js";
+app.use(usersRoutes);
 
+//Articles API
+import articlesRoutes from "./routers/articlesRoute.js";
+app.use(articlesRoutes);
 
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, (error) => {
