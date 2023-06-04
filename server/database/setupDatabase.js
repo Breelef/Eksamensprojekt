@@ -24,6 +24,6 @@ CREATE TABLE IF NOT EXISTS articles (
     publishedAt DATETIME,
     image BLOB,
     publisherID INTEGER,
-    FOREIGN KEY(publisher) REFERENCES users(id)
+    FOREIGN KEY(publisherID) REFERENCES users(id)
     );
 `);

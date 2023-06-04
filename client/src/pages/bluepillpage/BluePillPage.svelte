@@ -1,23 +1,45 @@
 <script>
     import { Card } from "flowbite-svelte";
-    import { ArticleListBluePill } from "../../../store/globalStore";
+    import { ArticleListBluePill, BASE_URL } from "../../../store/globalStore";
     import io from "socket.io-client"
     import { onMount } from "svelte";
 
     let socket;
+    let articleCount = 0;
     document.body.style.backgroundColor = "#5D8DD6";
     onMount(() => {
         socket = io("localhost:8080/bluepill");
 
-        socket.on("bluepillarticles", (data) => {
-            const articles = data.articles.map((article, index) => ({
+        socket.on("bluepillarticles", async (data) => {
+            const articles = data.articles.map((article) => ({
                 ...article,
-                key: index.toString()
+                key: (articleCount++).toString()
             }));
-            ArticleListBluePill.set(articles);
+            const otherArticles = await fetchOtherArticles();
+            const allArticles = [...articles, ...otherArticles];
+            const shuffledArticles = allArticles.sort(() => 0.5 - Math.random());
+            ArticleListBluePill.set(shuffledArticles);
         });
         socket.emit("requestArticlesbluepill");
     });
+    async function fetchOtherArticles(){
+        let currentLength;
+        ArticleListBluePill.subscribe(value => { currentLength = value.length; })();
+        const response = await fetch($BASE_URL + "/articles", {
+            method: "GET",
+            credentials: "include",
+        });
+        const data = await response.json();
+        const articles = data.map((article) => ({
+            title: article.title,
+            description: article.description,
+            urlToImage: "/redpill.png", 
+            publishedAt: article.publishedAt,
+            url: '',
+            key: (articleCount++).toString() 
+        }));
+        return articles;
+    }
 
 </script>
 <div class="flex flex-wrap">

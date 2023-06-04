@@ -3,18 +3,23 @@
     import { onMount, afterUpdate } from "svelte";
     import { chatMessagesRedpill, user, BASE_URL, BluepillAccounts } from "../../../store/globalStore";
     import { derived } from "svelte/store";
-    import { Button, Input, Listgroup, ListgroupItem } from "flowbite-svelte";
-
+    import { Button, Input, Listgroup, ListgroupItem, Modal, Textarea, Label} from "flowbite-svelte";
+    import { checkSession } from "../../utils/sessionUtil.js";
+    let formModal = false;
     let socket;
     let newMessage = "";
+    let title = '';
+    let description = '';
     const username = derived(user, ($user) => $user ? $user.username : null);
 
     onMount(() => {
+        document.body.style.backgroundColor = "#000";
         socket = io("localhost:8080/redpill");
         socket.on("Redpill admin chat messages", (data) => {
             chatMessagesRedpill.update((messages) => [...messages, data]);
         });
         getAllBluePillUsers();
+        
     });
     async function getAllBluePillUsers(){
       const result = await fetch($BASE_URL + "/users", {
@@ -50,6 +55,32 @@
            newMessage = "";
         }
     };
+    async function sumbitArticle(event){
+      event.preventDefault();
+      const currentDate = new Date();
+      const publishedAt = currentDate.toISOString().slice(0, -5) + 'Z';
+      const userData = await checkSession($BASE_URL);
+      const thisUser = await fetch($BASE_URL + "/users/" + userData.username, {
+        method: "GET",
+        credentials: "include"
+      });
+      const thisUserJson = await thisUser.json();
+      const publisherID = thisUserJson.id;
+      const data = { title, description, publishedAt, publisherID };
+      console.log(data);
+      const response = await fetch($BASE_URL + "/articles", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+        credentials: 'include'
+      });
+      const result = await response.json();
+      if(response.ok){
+        alert(result.message);
+      }else{
+        alert(result.message);
+      }
+    }
     function handleKeyDown(event) {
     if (event.key === "Enter") {
       sendChatMessage();
@@ -61,6 +92,13 @@
     chatContainer.scrollTop = chatContainer.scrollHeight;
   });
 
+  let textareaprops = {
+    id: 'description',
+    name: 'description',
+    label: 'Your description',
+    rows: 4,
+    placeholder: 'Description.....',
+  };
 </script>
 <style>
     .chat-container {
@@ -98,4 +136,21 @@
       </Listgroup>
     </div>
   </div>
+
+<Button btnClass="bg-green-600 text-white px-4 py-2 rounded top-0 right-0 mt-4 mr-4" on:click={() => formModal = true}>Write Article</Button>
+
+<Modal bind:open={formModal} size="md" autoclose={false} class="w-full" defaultClass="bg-black" style="background-color: black !important; width: 100%;">
+  <form class="flex flex-col space-y-6" on:submit={sumbitArticle}>
+    <h3 class="mb-4 text-xl font-medium text-green-500">Write an article for the bluepillers</h3>
+    <Label class="space-y-2 text-green-500">
+      <span>Title</span>
+      <Input defaultClass="bg-slate-950 text-green-500" type="text" name="title" placeholder="Title" bind:value={title} required />
+    </Label>
+    <Label class="space-y-2 text-green-500">
+      <span>Description</span>
+      <Textarea defaultClass="bg-slate-950 text-green-500" {...textareaprops} required bind:value={description} />
+    </Label>
+    <Button btnClass="bg-green-600 text-white px-4 py-2 rounded" type="submit" class="w-full1">Submit article</Button>
+  </form>
+</Modal>
 

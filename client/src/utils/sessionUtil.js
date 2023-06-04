@@ -1,4 +1,3 @@
-import { navigate } from "svelte-navigator";
 
 export async function checkSession(BASE_URL) {
   try {
@@ -6,7 +5,6 @@ export async function checkSession(BASE_URL) {
       method: "GET",
       credentials: "include",
     });
-    console.log(response);
     if (response.ok) {
       const data = await response.json();
       return data;
