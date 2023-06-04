@@ -26,9 +26,8 @@ function constructWelcomeMail(email, name){
 }
 
 router.get("/users", async (req, res) => {
-    const result = await db.get("SELECT * FROM users");
-    const response = result.rows;
-    res.json(response);
+    const response = await db.all("SELECT id, username, email, hasChosen, choice FROM users");
+    res.send(response);
 });
 
 router.get("/users/:username", async (req, res) => {
